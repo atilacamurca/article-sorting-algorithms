@@ -1,0 +1,46 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+
+% -- hyperlink text
+\usepackage[colorlinks,
+  urlcolor=blue,
+  hyperindex,
+  pdfdisplaydoctitle,
+  pageanchor,
+  linkcolor=blue]{hyperref}
+% -- hyperlink text
+\usepackage{url}
+
+% -- glossary
+\usepackage[toc=true,style=list]{glossary}
+% ...
+\makeglossary
+% -- glossary
+
+\title{Algoritmos de Ordenação}
+\author{Átila Camurça}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Este artigo pretende mostrar métodos de ordenação e seus respectivos
+resultados em relação ao número de itens ordenados, tempo de ordenação,
+consumo de recursos, e ao final compará-los determinando qual o melhor em cada
+situação.
+
+\smallskip
+\noindent \textbf{Palavras-chave:} ordenação, análise assintótica.
+
+\end{abstract}
+
+\include{content}
+
+\nocite{harris}
+\nocite{santos}
+\bibliographystyle{ieeetr}
+\bibliography{reference}% expects file "reference.bib"
+
+\end{document}
