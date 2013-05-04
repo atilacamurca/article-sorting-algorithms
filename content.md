@@ -128,6 +128,8 @@ end
 <!--
 referencias counting
 http://rosettacode.org/wiki/Sorting_algorithms/Counting_sort#Java
+
+http://www.shannarasite.org/kb/kbsu32.html
 -->
 
 ## Counting Sort
@@ -137,7 +139,16 @@ Para a ordenação é preciso contar quantos elementos existem e colocá-los num
 temporário onde o índice do mesmo é o valor e cada índice representa o número de vezes
 que aquele valor aparece.
 
-### Complexidade
+### Complexidade temporal
+
+O algoritmo tem tempo de execução de $\Theta(n + k)$, onde $n$ é o número de elementos
+a serem ordenados e $k$ é a variação dos tais números. Se $k = O(n)$, este algoritmo
+tem performance $\Theta(n)$.
+
+### Complexidade espacial
+
+A complexidade espacial é $\Theta(n)$, onde $n$ é o tamanho do vetor que conta os
+valores. Nenhuma operação de troca é necessária durante o processo.
 
 ### Pseudo-código
 
@@ -166,8 +177,6 @@ end
 
 ### Pseudo-código
 
-\newpage
-
 ## Algoritmo Proposto - Busca do maior e menor
 
 <!--
@@ -175,49 +184,110 @@ TODO: pesquisar como colocar imagens relativas ao texto!
 -->
 
 Inicialmente definimos onde o maior e o menor elementos serão colocados, usando as variáveis
-`ordEsq` e `ordDir`.
+`ordEsq` e `ordDir` como visto na figura \ref{fig:passo1}.
 
-\begin{figure}[h]
+\begin{figure}[t]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo1.png}
+   \caption{definir posicionamento inicial}
+   \label{fig:passo1}
 \end{figure}
 
+Logo em seguida fazemos uma busca procurando o maior e o menor elementos (Ver figura \ref{fig:passo2}).
 
-Logo em seguida fazemos uma busca procurando o maior e o menor elementos.
-
-\begin{figure}[h]
+\begin{figure}[t]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo2.png}
+   \caption{busca do maior e menor elementos}
+   \label{fig:passo2}
 \end{figure}
 
 Ao encontrar devemos trocar o `menor` com `ordEsq` e `maior` com `ordDir`. Logo
-em seguida incrementar o valor de `ordEsq` e decrementar o valor de `ordDir`.
+em seguida incrementar o valor de `ordEsq` e decrementar o valor de `ordDir`
+(Ver figura \ref{fig:passo3}).
 
 \begin{figure}[h]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo3.png}
+   \caption{tamanho do vetor torna-se $n - 2$}
+   \label{fig:passo3}
 \end{figure}
 
-\newpage
-
-\begin{figure}[h]
+\begin{figure}[p]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo4.png}
 \end{figure}
 
 Notamos que a medida que estamos ordenando, o caminho a percorrer vai ficando
-cada vez menor.
+cada vez menor (Ver figura \ref{fig:passo5}).
 
-\begin{figure}[h]
+\begin{figure}[p]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo5.png}
+   \caption{tamanho torna-se $n - 4$}
+   \label{fig:passo5}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[p]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo6.png}
 \end{figure}
 
-Finalmente, para um *array* ímpar temos que o valor de `ordEsq` e `ordDir`
-são iguais. Nessa condição não restam elementos a serem comparados.
-
-\begin{figure}[h]
+\begin{figure}[p]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo7.png}
+   \caption{vetor ordenado}
+   \label{fig:passo7}
 \end{figure}
+
+Finalmente, para um *array* ímpar temos que o valor de `ordEsq` e `ordDir`
+são iguais. Nessa condição não restam elementos a serem comparados (Ver figura
+\ref{fig:passo7}).
+
+### Complexidade
+
+Podemos notar que o algoritmo faz $n$ comparações iniciais. Depois faz $n - 2$
+comparações. Em seguida $n - 4$. E assim por diante.
+
+<!--
+TODO: mostrar complexidade detalhada...
+-->
+
+### Pseudo-código
+
+~~~
+void maior_menor_sort(V[], n)
+begin
+	ordEsq = 0, ordDir = n - 1
+	for i = ordEsq to (n / 2) do
+		maior = i
+		menor = i
+		for j = i + 1 to ordDir + 1 do
+			// encontrar maior
+			if V[j] > V[maior] do
+				maior = j
+			endif
+			
+			// encontrar menor
+			if V[j] < V[menor]
+				menor = j
+			endif
+		endfor
+		
+		if maior != i do
+			aux = V[ordDir]
+			V[ordDir] = V[maior]
+			V[maior] = aux
+		endif
+		
+		if menor != i do
+			aux = V[ordEsq]
+			V[ordEsq] = V[menor]
+			V[menor] = aux
+		endif
+		
+		ordEsq = ordEsq + 1
+		ordDir = ordDir - 1
+		
+		if ordLeft == ordDir do
+			break
+		endif
+	endfor
+end
+~~~
 
 
 

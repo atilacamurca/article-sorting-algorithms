@@ -140,7 +140,17 @@ comparações. Para a ordenação é preciso contar quantos elementos existem
 e colocá-los num array temporário onde o índice do mesmo é o valor e
 cada índice representa o número de vezes que aquele valor aparece.
 
-\subsubsection{Complexidade}
+\subsubsection{Complexidade temporal}
+
+O algoritmo tem tempo de execução de $\Theta(n + k)$, onde $n$ é o
+número de elementos a serem ordenados e $k$ é a variação dos tais
+números. Se $k = O(n)$, este algoritmo tem performance $\Theta(n)$.
+
+\subsubsection{Complexidade espacial}
+
+A complexidade espacial é $\Theta(n)$, onde $n$ é o tamanho do vetor que
+conta os valores. Nenhuma operação de troca é necessária durante o
+processo.
 
 \subsubsection{Pseudo-código}
 
@@ -168,53 +178,110 @@ end
 
 \subsubsection{Pseudo-código}
 
-\newpage
-
 \subsection{Algoritmo Proposto - Busca do maior e menor}
 
 Inicialmente definimos onde o maior e o menor elementos serão colocados,
-usando as variáveis \texttt{ordEsq} e \texttt{ordDir}.
+usando as variáveis \texttt{ordEsq} e \texttt{ordDir} como visto na
+figura \ref{fig:passo1}.
 
-\begin{figure}[h]
+\begin{figure}[t]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo1.png}
+   \caption{definir posicionamento inicial}
+   \label{fig:passo1}
 \end{figure}
 
-Logo em seguida fazemos uma busca procurando o maior e o menor
-elementos.
+Logo em seguida fazemos uma busca procurando o maior e o menor elementos
+(Ver figura \ref{fig:passo2}).
 
-\begin{figure}[h]
+\begin{figure}[t]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo2.png}
+   \caption{busca do maior e menor elementos}
+   \label{fig:passo2}
 \end{figure}
 
 Ao encontrar devemos trocar o \texttt{menor} com \texttt{ordEsq} e
 \texttt{maior} com \texttt{ordDir}. Logo em seguida incrementar o valor
-de \texttt{ordEsq} e decrementar o valor de \texttt{ordDir}.
+de \texttt{ordEsq} e decrementar o valor de \texttt{ordDir} (Ver figura
+\ref{fig:passo3}).
 
 \begin{figure}[h]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo3.png}
+   \caption{tamanho do vetor torna-se $n - 2$}
+   \label{fig:passo3}
 \end{figure}
 
-\newpage
-
-\begin{figure}[h]
+\begin{figure}[p]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo4.png}
 \end{figure}
 
 Notamos que a medida que estamos ordenando, o caminho a percorrer vai
-ficando cada vez menor.
+ficando cada vez menor (Ver figura \ref{fig:passo5}).
 
-\begin{figure}[h]
+\begin{figure}[p]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo5.png}
+   \caption{tamanho torna-se $n - 4$}
+   \label{fig:passo5}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[p]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo6.png}
+\end{figure}
+
+\begin{figure}[p]
+   \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo7.png}
+   \caption{vetor ordenado}
+   \label{fig:passo7}
 \end{figure}
 
 Finalmente, para um \emph{array} ímpar temos que o valor de
 \texttt{ordEsq} e \texttt{ordDir} são iguais. Nessa condição não restam
-elementos a serem comparados.
+elementos a serem comparados (Ver figura \ref{fig:passo7}).
 
-\begin{figure}[h]
-   \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo7.png}
-\end{figure}
+\subsubsection{Complexidade}
+
+Podemos notar que o algoritmo faz $n$ comparações iniciais. Depois faz
+$n - 2$ comparações. Em seguida $n - 4$. E assim por diante.
+
+\subsubsection{Pseudo-código}
+
+\begin{verbatim}
+void maior_menor_sort(V[], n)
+begin
+    ordEsq = 0, ordDir = n - 1
+    for i = ordEsq to (n / 2) do
+        maior = i
+        menor = i
+        for j = i + 1 to ordDir + 1 do
+            // encontrar maior
+            if V[j] > V[maior] do
+                maior = j
+            endif
+
+            // encontrar menor
+            if V[j] < V[menor]
+                menor = j
+            endif
+        endfor
+
+        if maior != i do
+            aux = V[ordDir]
+            V[ordDir] = V[maior]
+            V[maior] = aux
+        endif
+
+        if menor != i do
+            aux = V[ordEsq]
+            V[ordEsq] = V[menor]
+            V[menor] = aux
+        endif
+
+        ordEsq = ordEsq + 1
+        ordDir = ordDir - 1
+
+        if ordLeft == ordDir do
+            break
+        endif
+    endfor
+end
+\end{verbatim}
+
