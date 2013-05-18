@@ -28,7 +28,7 @@ ordenação:
 \item
   Counting Sort
 \item
-  Radix Sort
+  Bigger Smaller Sort
 \end{itemize}
 \subsection{Bubble Sort}
 
@@ -133,6 +133,62 @@ begin
     endfor
 end
 \end{verbatim}
+\subsection{Quick Sort}
+
+Método caracterizado pelo uso da técnica de divisão e conquista, ou
+seja, dividir o problema inicial em subproblemas e resolver um problema
+menor utilizando recursividade.
+
+Consiste em dividir o vetor em dois subvetores, dependendo de um
+elemento denominado pivô, normalmente o primeiro elemento do vetor. Um
+dos subvetores contém os elementos menores que o pivô enquanto o outro
+contém os maiores. O pivô é colocado entre ambos, ficando na posição
+correta. Os subvetores são ordenados da mesma forma, até que se chegue a
+um vetor com um só elemento.
+
+\subsubsection{Complexidade}
+
+Em média o algoritmo é da ordem $O(n \cdot \log n)$, ou seja, há
+$\log n$ partições, e para obter cada partição fazemos $n$ comparações
+(e não mais que $\dfrac{n}{2}$ trocas).
+
+No pior caso temos $O(n^2)$
+
+\subsubsection{Pseudo-código}
+
+\begin{verbatim}
+void quick_sort(V[], initial, final)
+begin
+    i = initial
+    j = final
+    pivot = V[(initial + final) / 2]
+    while i < j do
+        while V[i] < pivot do
+            i = i + 1
+        endwhile
+
+        while V[j] > pivot do
+            j = j + 1
+        endwhile
+
+        if i <= j do
+            aux = V[i]
+            V[i] = V[j]
+            V[j] = aux
+            i = i + 1
+            j = j + 1
+        endif
+    endwhile
+
+    if j > initial do
+        quick_sort(V, initial, j)
+    endif
+
+    if i < final do
+        quick_sort(V, i, final)
+    endif
+end
+\end{verbatim}
 \subsection{Counting Sort}
 
 Diferente de todos os algoritmos vistos até aqui, esse algoritmo não usa
@@ -172,19 +228,13 @@ begin
     endfor
 end
 \end{verbatim}
-\subsection{Radix Sort}
-
-\subsubsection{Complexidade}
-
-\subsubsection{Pseudo-código}
-
 \subsection{Algoritmo Proposto - Busca do maior e menor}
 
 Inicialmente definimos onde o maior e o menor elementos serão colocados,
 usando as variáveis \texttt{ordEsq} e \texttt{ordDir} como visto na
 figura \ref{fig:passo1}.
 
-\begin{figure}[t]
+\begin{figure}[h]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo1.png}
    \caption{definir posicionamento inicial}
    \label{fig:passo1}
@@ -193,7 +243,7 @@ figura \ref{fig:passo1}.
 Logo em seguida fazemos uma busca procurando o maior e o menor elementos
 (Ver figura \ref{fig:passo2}).
 
-\begin{figure}[t]
+\begin{figure}[h]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo2.png}
    \caption{busca do maior e menor elementos}
    \label{fig:passo2}
@@ -210,24 +260,24 @@ de \texttt{ordEsq} e decrementar o valor de \texttt{ordDir} (Ver figura
    \label{fig:passo3}
 \end{figure}
 
-\begin{figure}[p]
+\begin{figure}[h]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo4.png}
 \end{figure}
 
 Notamos que a medida que estamos ordenando, o caminho a percorrer vai
 ficando cada vez menor (Ver figura \ref{fig:passo5}).
 
-\begin{figure}[p]
+\begin{figure}[h]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo5.png}
    \caption{tamanho torna-se $n - 4$}
    \label{fig:passo5}
 \end{figure}
 
-\begin{figure}[p]
+\begin{figure}[h]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo6.png}
 \end{figure}
 
-\begin{figure}[p]
+\begin{figure}[h]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo7.png}
    \caption{vetor ordenado}
    \label{fig:passo7}
@@ -242,6 +292,13 @@ elementos a serem comparados (Ver figura \ref{fig:passo7}).
 Podemos notar que o algoritmo faz $n$ comparações iniciais. Depois faz
 $n - 2$ comparações. Em seguida $n - 4$. E assim por diante.
 
+Podemos criar um conjunto $S = \{2, 4, 6, \dots, n\}$. Dessa forma
+podemos dizer que:
+
+\begin{eqnarray*}
+T(n) = \sum_{i = 1}^{\frac{n}{2}} S_i
+\end{eqnarray*}
+
 \subsubsection{Pseudo-código}
 
 \begin{verbatim}
@@ -252,12 +309,10 @@ begin
         maior = i
         menor = i
         for j = i + 1 to ordDir + 1 do
-            // encontrar maior
             if V[j] > V[maior] do
                 maior = j
             endif
 
-            // encontrar menor
             if V[j] < V[menor]
                 menor = j
             endif
@@ -284,4 +339,561 @@ begin
     endfor
 end
 \end{verbatim}
+\section{Metodologia}
 
+\subsection{Como os vetores foram gerados}
+
+Os valores do vetor foram gerados usando algoritmo pseudo-randômico em
+\emph{python} no seguinte formato:
+
+\begin{itemize}
+\item
+  \textbf{1° linha}: tamanho do vetor a ser gerado.
+\item
+  \textbf{restante das linhas}: valores do vetor.
+\end{itemize}
+O código pode ser encontrado em
+\url{https://github.com/atilacamurca/sorty/blob/master/files/gen.py}.
+
+\subsection{Máquina utilizada}
+
+Vejamos a tabela \ref{tab:machine} mostrando detalhes da máquina
+utilizada para ordenar os vetores.
+
+\ctable[caption = dados obtidos pelo comando \texttt{lshw} no
+Linux.\label{tab:machine}, pos = H, center, botcap]{ll}
+{% notes
+}
+{% rows
+\FL
+\parbox[b]{0.15\columnwidth}{\raggedright
+Classe
+} & \parbox[b]{0.67\columnwidth}{\raggedright
+Descrição
+}
+\ML
+\parbox[t]{0.15\columnwidth}{\raggedright
+system
+} & \parbox[t]{0.67\columnwidth}{\raggedright
+\texttt{6078AA7}
+}
+\\\noalign{\medskip}
+\parbox[t]{0.15\columnwidth}{\raggedright
+bus
+} & \parbox[t]{0.67\columnwidth}{\raggedright
+\texttt{LENOVO}
+}
+\\\noalign{\medskip}
+\parbox[t]{0.15\columnwidth}{\raggedright
+memory
+} & \parbox[t]{0.67\columnwidth}{\raggedright
+\texttt{2GiB System Memory}
+}
+\\\noalign{\medskip}
+\parbox[t]{0.15\columnwidth}{\raggedright
+} & \parbox[t]{0.67\columnwidth}{\raggedright
+\texttt{1GiB DIMM DDR2 Synchronous 800 MHz}
+}
+\\\noalign{\medskip}
+\parbox[t]{0.15\columnwidth}{\raggedright
+} & \parbox[t]{0.67\columnwidth}{\raggedright
+\texttt{DIMM DDR2 Synchronous 800 MHz}
+}
+\\\noalign{\medskip}
+\parbox[t]{0.15\columnwidth}{\raggedright
+processor
+} & \parbox[t]{0.67\columnwidth}{\raggedright
+\texttt{Intel(R) Core(TM)2 Duo CPU E6550 @ 2.33GHz}
+}
+\\\noalign{\medskip}
+\parbox[t]{0.15\columnwidth}{\raggedright
+memory
+} & \parbox[t]{0.67\columnwidth}{\raggedright
+\texttt{16KiB L1 cache}
+}
+\\\noalign{\medskip}
+\parbox[t]{0.15\columnwidth}{\raggedright
+} & \parbox[t]{0.67\columnwidth}{\raggedright
+\texttt{4MiB L2 cache}
+}
+\LL
+}
+
+\subsection{Estatísticas}
+
+As tabelas abaixo descrevem os algoritmos com seus respectivos tamanhos
+dos vetores, médias, valores máximos e mínimos.
+
+\ctable[caption = Vetor de 10 posições., pos = H, center, botcap]{lrrr}
+{% notes
+}
+{% rows
+\FL
+\parbox[b]{0.25\columnwidth}{\raggedright
+Algoritmo
+} & \parbox[b]{0.17\columnwidth}{\raggedleft
+Média
+} & \parbox[b]{0.17\columnwidth}{\raggedleft
+Máx.
+} & \parbox[b]{0.17\columnwidth}{\raggedleft
+Mín.
+}
+\ML
+\parbox[t]{0.25\columnwidth}{\raggedright
+Bubble
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.072
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Insertion
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.072
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Selection
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.072
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Quick
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.072
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Counting
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.072
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Bigger Smaller
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.072
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+}
+\LL
+}
+
+\ctable[caption = Vetor de 100 posições., pos = H, center, botcap]{lrrr}
+{% notes
+}
+{% rows
+\FL
+\parbox[b]{0.25\columnwidth}{\raggedright
+Algoritmo
+} & \parbox[b]{0.17\columnwidth}{\raggedleft
+Média
+} & \parbox[b]{0.17\columnwidth}{\raggedleft
+Máx.
+} & \parbox[b]{0.17\columnwidth}{\raggedleft
+Mín.
+}
+\ML
+\parbox[t]{0.25\columnwidth}{\raggedright
+Bubble
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.072
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Insertion
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.072
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Selection
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.072
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Quick
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.072
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Counting
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.072
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Bigger Smaller
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.072
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+}
+\LL
+}
+
+\ctable[caption = Vetor de 1000 posições.,
+pos = H, center, botcap]{lrrr}
+{% notes
+}
+{% rows
+\FL
+\parbox[b]{0.25\columnwidth}{\raggedright
+Algoritmo
+} & \parbox[b]{0.17\columnwidth}{\raggedleft
+Média
+} & \parbox[b]{0.17\columnwidth}{\raggedleft
+Máx.
+} & \parbox[b]{0.17\columnwidth}{\raggedleft
+Mín.
+}
+\ML
+\parbox[t]{0.25\columnwidth}{\raggedright
+Bubble
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.08
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.1
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.1
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Insertion
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.086
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.11
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.1
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Selection
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.08
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.1
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.1
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Quick
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.072
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Counting
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.072
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.09
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Bigger Smaller
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.08
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.1
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.1
+}
+\LL
+}
+
+\ctable[caption = Vetor de 10000 posições.,
+pos = H, center, botcap]{lrrr}
+{% notes
+}
+{% rows
+\FL
+\parbox[b]{0.25\columnwidth}{\raggedright
+Algoritmo
+} & \parbox[b]{0.17\columnwidth}{\raggedleft
+Média
+} & \parbox[b]{0.17\columnwidth}{\raggedleft
+Máx.
+} & \parbox[b]{0.17\columnwidth}{\raggedleft
+Mín.
+}
+\ML
+\parbox[t]{0.25\columnwidth}{\raggedright
+Bubble
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.342
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.43
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.42
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Insertion
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.142
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.19
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.16
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Selection
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.226
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.29
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.28
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Quick
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.128
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.16
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.16
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Counting
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.116
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.15
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.14
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Bigger Smaller
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.244
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.31
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.29
+}
+\LL
+}
+
+\ctable[caption = Vetor de 100000 posições.,
+pos = H, center, botcap]{lrrr}
+{% notes
+}
+{% rows
+\FL
+\parbox[b]{0.25\columnwidth}{\raggedright
+Algoritmo
+} & \parbox[b]{0.17\columnwidth}{\raggedleft
+Média
+} & \parbox[b]{0.17\columnwidth}{\raggedleft
+Máx.
+} & \parbox[b]{0.17\columnwidth}{\raggedleft
+Mín.
+}
+\ML
+\parbox[t]{0.25\columnwidth}{\raggedright
+Bubble
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+22.508
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+28.14
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+28.13
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Insertion
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+2.384
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+2.98
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+2.98
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Selection
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+14.128
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+17.66
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+17.66
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Quick
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.158
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.21
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.19
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Counting
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.146
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.19
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.18
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Bigger Smaller
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+10.584
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+13.23
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+13.22
+}
+\LL
+}
+
+\ctable[caption = Vetor de 1000000 posições.,
+pos = H, center, botcap]{lrrr}
+{% notes
+}
+{% rows
+\FL
+\parbox[b]{0.25\columnwidth}{\raggedright
+Algoritmo
+} & \parbox[b]{0.17\columnwidth}{\raggedleft
+Média
+} & \parbox[b]{0.17\columnwidth}{\raggedleft
+Máx.
+} & \parbox[b]{0.17\columnwidth}{\raggedleft
+Mín.
+}
+\ML
+\parbox[t]{0.25\columnwidth}{\raggedright
+Quick
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.318
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.4
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.39
+}
+\\\noalign{\medskip}
+\parbox[t]{0.25\columnwidth}{\raggedright
+Counting
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.242
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.31
+} & \parbox[t]{0.17\columnwidth}{\raggedleft
+0.3
+}
+\LL
+}
+
+\subsection{Gráficos}
+
+Vamos ver uma comparação com vetores de tamanho variando de 10 a 1000.
+Podemos notar que inicialmente todos tendem a levar o mesmo tempo na
+média como visto na figura \ref{fig:chart1}. Entretanto a partir do 1000
+eles começam a modificar significamente o tempo de execução médio.
+
+\begin{figure}[b]
+   \includegraphics[scale=0.47]{img/charts/chart-1.png}
+   \caption{Comparação 10 a 1000}
+   \label{fig:chart1}
+\end{figure}
+
+Analisando agora vetores de tamanho variando de 1000 a 10000 veremos uma
+mudança mais brusca no tempo de execução dos algoritmos, exceto os
+algoritmos Quick Sort e counting Sort que são logarítmicos e tendem a
+manter seu tempo de execução baixo (figura \ref{fig:chart2}).
+
+\begin{figure}[h]
+   \includegraphics[scale=0.47]{img/charts/chart-2.png}
+   \caption{Comparação 1000 a 10000}
+   \label{fig:chart2}
+\end{figure}
+
+Chegamos a comparação de tamanhos grandes e podemos notar que a
+diferença de tempo dá um salto bastante significativo para algoritmos
+quadráticos, mas ainda assim Quick Sort e Counting Sort se mantém
+(figura \ref{fig:chart3}).
+
+\begin{figure}[h]
+   \includegraphics[scale=0.47]{img/charts/chart-3.png}
+   \caption{Comparação 10000 a 100000}
+   \label{fig:chart3}
+\end{figure}
+
+Vamos olhar de perto o Quick e Counting Sort mostrados na figura
+\ref{fig:chart4}. Podemos notar que o Counting Sort cresce mais lento
+que o Quick Sort. Com isso chegamos a conclusão que comparação de
+valores leva um pouco mais de tempo que outras operações, entretanto o
+algoritmo Counting Sort usa um vetor adicional, que neste caso tinha
+tamanho 100 (todos os vetores possuem valores variando de 0 a 99).
+
+\begin{figure}[h]
+   \includegraphics[scale=0.47]{img/charts/chart-4.png}
+   \caption{Comparação 10000 a 1000000}
+   \label{fig:chart4}
+\end{figure}

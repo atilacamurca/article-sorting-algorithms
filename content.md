@@ -18,9 +18,7 @@ Veremos a implementação e estatísticas dos seguintes métodos de ordenação:
 * Insertion Sort
 * Quick Sort
 * Counting Sort
-* Radix Sort
-
-<!-- definir algoritmos restantes... -->
+* Bigger Smaller Sort
 
 ## Bubble Sort
 
@@ -126,6 +124,67 @@ end
 ~~~
 
 <!--
+http://w3.ualg.pt/~hshah/ped/Aula%2014/Quick_final.html
+
+http://faculty.simpson.edu/lydia.sinapova/www/cmsc250/LN250_Weiss/L16-QuickSort.htm
+-->
+
+## Quick Sort
+
+Método caracterizado pelo uso da técnica de divisão e conquista, ou seja, dividir
+o problema inicial em subproblemas e resolver um problema menor utilizando
+recursividade.
+
+Consiste em dividir o vetor em dois subvetores, dependendo de um elemento denominado
+pivô, normalmente o primeiro elemento do vetor. Um dos subvetores contém os elementos
+menores que o pivô enquanto o outro contém os maiores. O pivô é colocado entre ambos,
+ ficando na posição correta. Os subvetores são ordenados da mesma forma, até que
+ se chegue a um vetor com um só elemento.
+
+### Complexidade
+
+Em média o algoritmo é da ordem $O(n \cdot \log n)$, ou seja, há $\log n$ partições,
+e para obter cada partição fazemos $n$ comparações (e não mais que $\dfrac{n}{2}$ trocas).
+
+No pior caso temos $O(n^2)$
+
+### Pseudo-código
+
+~~~
+void quick_sort(V[], initial, final)
+begin
+	i = initial
+	j = final
+	pivot = V[(initial + final) / 2]
+	while i < j do
+		while V[i] < pivot do
+			i = i + 1
+		endwhile
+		
+		while V[j] > pivot do
+			j = j + 1
+		endwhile
+		
+		if i <= j do
+			aux = V[i]
+			V[i] = V[j]
+			V[j] = aux
+			i = i + 1
+			j = j + 1
+		endif
+	endwhile
+	
+	if j > initial do
+		quick_sort(V, initial, j)
+	endif
+	
+	if i < final do
+		quick_sort(V, i, final)
+	endif
+end
+~~~
+
+<!--
 referencias counting
 http://rosettacode.org/wiki/Sorting_algorithms/Counting_sort#Java
 
@@ -171,22 +230,12 @@ begin
 end
 ~~~
 
-## Radix Sort
-
-### Complexidade
-
-### Pseudo-código
-
 ## Algoritmo Proposto - Busca do maior e menor
-
-<!--
-TODO: pesquisar como colocar imagens relativas ao texto!
--->
 
 Inicialmente definimos onde o maior e o menor elementos serão colocados, usando as variáveis
 `ordEsq` e `ordDir` como visto na figura \ref{fig:passo1}.
 
-\begin{figure}[t]
+\begin{figure}[h]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo1.png}
    \caption{definir posicionamento inicial}
    \label{fig:passo1}
@@ -194,7 +243,7 @@ Inicialmente definimos onde o maior e o menor elementos serão colocados, usando
 
 Logo em seguida fazemos uma busca procurando o maior e o menor elementos (Ver figura \ref{fig:passo2}).
 
-\begin{figure}[t]
+\begin{figure}[h]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo2.png}
    \caption{busca do maior e menor elementos}
    \label{fig:passo2}
@@ -210,24 +259,24 @@ em seguida incrementar o valor de `ordEsq` e decrementar o valor de `ordDir`
    \label{fig:passo3}
 \end{figure}
 
-\begin{figure}[p]
+\begin{figure}[h]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo4.png}
 \end{figure}
 
 Notamos que a medida que estamos ordenando, o caminho a percorrer vai ficando
 cada vez menor (Ver figura \ref{fig:passo5}).
 
-\begin{figure}[p]
+\begin{figure}[h]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo5.png}
    \caption{tamanho torna-se $n - 4$}
    \label{fig:passo5}
 \end{figure}
 
-\begin{figure}[p]
+\begin{figure}[h]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo6.png}
 \end{figure}
 
-\begin{figure}[p]
+\begin{figure}[h]
    \includegraphics[scale=0.6]{img/maior.menor.algoritmo/passo7.png}
    \caption{vetor ordenado}
    \label{fig:passo7}
@@ -242,9 +291,11 @@ são iguais. Nessa condição não restam elementos a serem comparados (Ver figu
 Podemos notar que o algoritmo faz $n$ comparações iniciais. Depois faz $n - 2$
 comparações. Em seguida $n - 4$. E assim por diante.
 
-<!--
-TODO: mostrar complexidade detalhada...
--->
+Podemos criar um conjunto $S = \{2, 4, 6, \dots, n\}$. Dessa forma podemos dizer que:
+
+\begin{eqnarray*}
+T(n) = \sum_{i = 1}^{\frac{n}{2}} S_i
+\end{eqnarray*}
 
 ### Pseudo-código
 
@@ -256,12 +307,10 @@ begin
 		maior = i
 		menor = i
 		for j = i + 1 to ordDir + 1 do
-			// encontrar maior
 			if V[j] > V[maior] do
 				maior = j
 			endif
 			
-			// encontrar menor
 			if V[j] < V[menor]
 				menor = j
 			endif
@@ -289,8 +338,194 @@ begin
 end
 ~~~
 
+# Metodologia
 
+## Como os vetores foram gerados
 
+Os valores do vetor foram gerados usando algoritmo pseudo-randômico em *python*
+no seguinte formato:
+
+* **1° linha**: tamanho do vetor a ser gerado.
+* **restante das linhas**: valores do vetor.
+
+O código pode ser encontrado em <https://github.com/atilacamurca/sorty/blob/master/files/gen.py>.
+
+## Máquina utilizada
+
+Vejamos a tabela \ref{tab:machine} mostrando detalhes da máquina utilizada para ordenar os vetores.
+
+-----------------------------------------------------------
+Classe     Descrição
+---------  ------------------------------------------------
+system     `6078AA7`
+
+bus        `LENOVO`
+
+memory     `2GiB System Memory`
+
+           `1GiB DIMM DDR2 Synchronous 800 MHz`
+
+           `DIMM DDR2 Synchronous 800 MHz`
+
+processor  `Intel(R) Core(TM)2 Duo CPU E6550 @ 2.33GHz`
+
+memory     `16KiB L1 cache`
+
+           `4MiB L2 cache`
+-----------------------------------------------------------
+
+Table: dados obtidos pelo comando `lshw` no Linux.\label{tab:machine}
+
+## Estatísticas
+
+As tabelas abaixo descrevem os algoritmos com seus respectivos tamanhos dos vetores,
+médias, valores máximos e mínimos.
+
+----------------------------------------------------
+Algoritmo              Média        Máx.        Mín.
+----------------  ----------  ----------  ----------
+Bubble                 0.072        0.09        0.09
+
+Insertion              0.072        0.09        0.09
+
+Selection              0.072        0.09        0.09
+
+Quick                  0.072        0.09        0.09
+
+Counting               0.072        0.09        0.09
+
+Bigger Smaller         0.072        0.09        0.09
+----------------------------------------------------
+
+Table: Vetor de 10 posições.
+
+----------------------------------------------------
+Algoritmo              Média        Máx.        Mín.
+----------------  ----------  ----------  ----------
+Bubble                 0.072        0.09        0.09
+
+Insertion              0.072        0.09        0.09
+
+Selection              0.072        0.09        0.09
+
+Quick                  0.072        0.09        0.09
+
+Counting               0.072        0.09        0.09
+
+Bigger Smaller         0.072        0.09        0.09
+----------------------------------------------------
+
+Table: Vetor de 100 posições.
+
+----------------------------------------------------
+Algoritmo              Média        Máx.        Mín.
+----------------  ----------  ----------  ----------
+Bubble                  0.08         0.1         0.1
+
+Insertion              0.086        0.11         0.1
+
+Selection               0.08         0.1         0.1
+
+Quick                  0.072        0.09        0.09
+
+Counting               0.072        0.09        0.09
+
+Bigger Smaller          0.08         0.1         0.1
+----------------------------------------------------
+
+Table: Vetor de 1000 posições.
+
+----------------------------------------------------
+Algoritmo              Média        Máx.        Mín.
+----------------  ----------  ----------  ----------
+Bubble                 0.342        0.43        0.42
+
+Insertion              0.142        0.19        0.16
+
+Selection              0.226        0.29        0.28
+
+Quick                  0.128        0.16        0.16
+
+Counting               0.116        0.15        0.14
+
+Bigger Smaller         0.244        0.31        0.29
+----------------------------------------------------
+
+Table: Vetor de 10000 posições.
+
+----------------------------------------------------
+Algoritmo              Média        Máx.        Mín.
+----------------  ----------  ----------  ----------
+Bubble                22.508       28.14       28.13
+
+Insertion              2.384        2.98        2.98
+
+Selection             14.128       17.66       17.66
+
+Quick                  0.158        0.21        0.19
+
+Counting               0.146        0.19        0.18
+
+Bigger Smaller        10.584       13.23       13.22
+----------------------------------------------------
+
+Table: Vetor de 100000 posições.
+
+----------------------------------------------------
+Algoritmo              Média        Máx.        Mín.
+----------------  ----------  ----------  ----------
+Quick                  0.318         0.4        0.39
+
+Counting               0.242        0.31         0.3
+----------------------------------------------------
+
+Table: Vetor de 1000000 posições.
+
+## Gráficos
+
+Vamos ver uma comparação com vetores de tamanho variando de 10 a 1000. Podemos notar
+que inicialmente todos tendem a levar o mesmo tempo na média como visto na figura
+\ref{fig:chart1}. Entretanto a partir do 1000 eles começam a modificar significamente
+o tempo de execução médio.
+
+\begin{figure}[b]
+   \includegraphics[scale=0.47]{img/charts/chart-1.png}
+   \caption{Comparação 10 a 1000}
+   \label{fig:chart1}
+\end{figure}
+
+Analisando agora vetores de tamanho variando de 1000 a 10000 veremos uma mudança
+mais brusca no tempo de execução dos algoritmos, exceto os algoritmos Quick Sort
+e counting Sort que são logarítmicos e tendem a manter seu tempo de execução baixo
+(figura \ref{fig:chart2}).
+
+\begin{figure}[h]
+   \includegraphics[scale=0.47]{img/charts/chart-2.png}
+   \caption{Comparação 1000 a 10000}
+   \label{fig:chart2}
+\end{figure}
+
+Chegamos a comparação de tamanhos grandes e podemos notar que a diferença de tempo
+dá um salto bastante significativo para algoritmos quadráticos, mas ainda assim
+Quick Sort e Counting Sort se mantém (figura \ref{fig:chart3}).
+
+\begin{figure}[h]
+   \includegraphics[scale=0.47]{img/charts/chart-3.png}
+   \caption{Comparação 10000 a 100000}
+   \label{fig:chart3}
+\end{figure}
+
+Vamos olhar de perto o Quick e Counting Sort mostrados na figura \ref{fig:chart4}.
+Podemos notar que o Counting Sort cresce mais lento que o Quick Sort. Com isso
+chegamos a conclusão que comparação de valores leva um pouco mais de tempo que outras
+operações, entretanto o algoritmo Counting Sort usa um vetor adicional, que neste
+caso tinha tamanho 100 (todos os vetores possuem valores variando de 0 a 99).
+
+\begin{figure}[h]
+   \includegraphics[scale=0.47]{img/charts/chart-4.png}
+   \caption{Comparação 10000 a 1000000}
+   \label{fig:chart4}
+\end{figure}
 
 
 
